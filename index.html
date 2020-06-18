@@ -96,7 +96,7 @@
                     пн-пт: с 10:00 до 22:00<br />
                     сб-вс: с 10:00 до 19:00
                 </p>
-                <a class="button" href="map.html">Как проехать</a>
+                <a class="button contacts-button-map" href="map.html">Как проехать</a>
                 <a class="button" href="contacts.html">Обратная связь</a>
             </section>
             <section class="appointment">
@@ -179,7 +179,7 @@
         </div>
     </footer>
     <section class="modal modal-login">
-           <h2>Личный кабинет</h2>
+        <h2>Личный кабинет</h2>
         <p class="modal-description">Введите пожалуйста свой логин и пароль</p>
         <form class="login-form" action="https://echo.htmlacademy.ru" method="post">
             <p>
@@ -206,12 +206,101 @@
     </section>
     <section class="modal modal-map">
         <h2 class="visually-hidden">Как до нас добраться</h2>
+        <iframe
+            src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d1998.6358678466097!2d30.322782891320045!3d59.93818418862219!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x469631fefe102551%3A0x19e070ca4ac35ecd!2sNerds!5e0!3m2!1sru!2sru!4v1592498803067!5m2!1sru!2sru"
+            width="766" height="560" frameborder="0" style="border:0;" allowfullscreen="" aria-hidden="false"
+            tabindex="0"></iframe>
         <p>
             <img src="img/map.jpg" width="780" height="560"
                 alt="Офис компании по адресу ул.Большая Конюшенная 19/8, Санкт-Петербург">
         </p>
         <button class="modal-close" type="button">Закрыть</button>
     </section>
+    <script>
+        let link = document.querySelector(".login-link");
+        let popup = document.querySelector(".modal-login");
+        let closeButton = popup.querySelector(".modal-close");
+        let login = popup.querySelector("[name=login]");
+        let form = popup.querySelector("form");
+        let password = form.querySelector("[name=password]");
+
+        let isStorageSupport = true;
+        let storage = "";
+
+        try {
+            storage = localStorage.getItem("login");
+        } catch (err) {
+            isStorageSupport = false; //если улетает в ошибку, не используем localStorage
+        }
+
+
+
+
+        link.addEventListener("click", function (evt) {
+            evt.preventDefault(); //отменяем дефолтное действие по клику
+            popup.classList.add("modal-show"); //делаем окно видимым
+
+            if (storage) {
+                login.value = storage;
+                password.focus(); // если логин есть в localStorage, то ставим фокус на пароль
+            } else {
+                login.focus();
+            }
+        });
+
+        closeButton.addEventListener("click", function (evt) {
+            evt.preventDefault();
+            popup.classList.remove("modal-show");
+            popup.classList.remove("modal-error");
+        });
+
+        form.addEventListener("submit", function (evt) {
+            if (!login.value || !password.value) {
+                evt.preventDefault();
+                popup.classList.remove("modal-error");
+                popup.offsetWidth = popup.offsetWidth;
+                popup.classList.add("modal-error");
+            } else {
+                if (isStorageSupport) {
+                    localStorage.setItem("login", login.value);
+                }
+
+            }
+        });
+
+        window.addEventListener("keydown", function (evt) {
+            if (evt.keyCode === 27) {
+                evt.preventDefault();
+                if (popup.classList.contains("modal-show")) {
+                    popup.classList.remove("modal-show");
+                    popup.classList.remove("modal-error");
+                }
+            }
+        });
+
+        let mapLink = document.querySelector(".contacts-button-map");
+        let mapPopup = document.querySelector(".modal-map");
+        let mapClose = mapPopup.querySelector(".modal-close");
+
+        mapLink.addEventListener("click", function (evt) {
+            evt.preventDefault(); //отменяем дефолтное действие по клику
+            mapPopup.classList.add("modal-show"); //делаем окно видимым
+        });
+
+        mapClose.addEventListener("click", function (evt) {
+            evt.preventDefault();
+            mapPopup.classList.remove("modal-show");
+        });
+
+        window.addEventListener("keydown", function (evt) {
+            if (evt.keyCode === 27) {
+                evt.preventDefault();
+                if (mapPopup.classList.contains("modal-show")) {
+                    mapPopup.classList.remove("modal-show");
+                }
+            }
+        });
+    </script>
 </body>
 
 </html>
